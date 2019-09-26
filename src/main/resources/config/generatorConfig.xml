@@ -17,7 +17,7 @@
 
         <!--2.加载连接数据库信息  -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.123.124:3306/mmal?characterEncoding=utf8"
+                        connectionURL="jdbc:mysql://192.168.43.26:3306/mmal?characterEncoding=utf8"
                         userId="root"
                         password="XHHP0913" />
         <javaTypeResolver>

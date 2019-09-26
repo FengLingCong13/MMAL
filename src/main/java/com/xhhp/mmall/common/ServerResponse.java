@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import javax.servlet.http.HttpServlet;
 import java.io.Serializable;
 
 /**
@@ -79,12 +80,13 @@ public class ServerResponse<T> implements Serializable {
     }
 
     public static <T> ServerResponse<T> createByERRORMessage(String errorMsg) {
-        return new ServerResponse<>(ResponseCode.SUCCESS.getCode(), errorMsg);
+        return new ServerResponse<>(ResponseCode.ERROR.getCode(), errorMsg);
     }
 
     public static <T> ServerResponse<T> createByErrorCodeMessage(int errorCode, String errorMessage) {
-        return new ServerResponse<>(ResponseCode.SUCCESS.getCode(), errorMessage);
+        return new ServerResponse<>(ResponseCode.ERROR.getCode(), errorMessage);
     }
+
 
 
 
