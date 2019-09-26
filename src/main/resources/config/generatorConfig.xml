@@ -1,86 +1,82 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE generatorConfiguration
-        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
-
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
+    <!-- !!!! Driver Class Path !!!! -->
+    <classPathEntry location="F:/apache-maven-3.2.2/RepMaven/mysql/mysql-connector-java/5.1.8/mysql-connector-java-5.1.8.jar"/>
 
-    <properties resource="datasource.properties"></properties>
-    <!--A.配置mysql驱动路径  -->
-    <classPathEntry
-            location="${db.driverLocation}"/>
-    <!-- B.配置信息 -->
-    <context id="my" targetRuntime="MyBatis3">
-
+    <context id="context" targetRuntime="MyBatis3">
         <!--1. value="true"去掉注释  ，如果不去掉注释的时候，
-                第二次生成的时候不会再后面追加内容，但是去掉注释的时候，
-                在第二次以后需要生成文件的时候先把它删掉，再生成，
-                否则就会在原来的文件后面追加内容-->
+               第二次生成的时候不会再后面追加内容，但是去掉注释的时候，
+               在第二次以后需要生成文件的时候先把它删掉，再生成，
+               否则就会在原来的文件后面追加内容-->
         <commentGenerator>
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
 
         <!--2.加载连接数据库信息  -->
-        <jdbcConnection driverClass="${db.driverClassName}"
-                        connectionURL="${db.url}"
-                        userId="{db.username}"
-                        password="${db.password}" />
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.123.124:3306/mmal?characterEncoding=utf8"
+                        userId="root"
+                        password="XHHP0913" />
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
 
-        <!--3.生成模型的包名和位置 -->
-        <javaModelGenerator targetPackage="com.xhhp.mmall.pojo"
-                            targetProject="./src/main/java">
-            <!--targetProject=  指定包所在的位置，只需要到src/man/java  -->
-            <property name="enableSubPackages" value="true"/>
+        <!-- !!!! Model Configurations !!!! -->
+        <javaModelGenerator targetPackage="com.xhhp.mmall.pojo" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
-            <!--如果包不存在，创建一个  -->
-            <property name="immutable" value="false"/>
         </javaModelGenerator>
 
-        <!--4.生成映射文件包名和位置 -->
-        <sqlMapGenerator targetPackage="mappers"
-                         targetProject="./src/main/resources"><!-- 指定包的位置 -->
-            <property name="enableSubPackages" value="true"/><!--如果包不存在创建一个  -->
+        <!-- !!!! Mapper XML Configurations !!!! -->
+        <sqlMapGenerator targetPackage="mappers" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
-        <!--5.生成dao层的包和位置  -->
-        <javaClientGenerator targetPackage="com.xhhp.mmall.dao" type="XMLMAPPER"
-                             targetProject="./src/main/java">
-            <property name="enableSubPackages" value="true"/>
+        <!-- !!!! Mapper Interface Configurations !!!! -->
+        <javaClientGenerator targetPackage="com.xhhp.mmall.dao" targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
         <!--6. 我要生成的表  可以一次性生成多张表 tableName是表名   domainObjectName是实体名 -->
         <table tableName="mmal_cart" domainObjectName="Cart"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
+               enableInsert="true"/>
         <table tableName="mmal_category" domainObjectName="Category"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
+               enableInsert="true"/>
         <table tableName="mmal_order" domainObjectName="Order"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
+               enableInsert="true"/>
         <table tableName="mmal_order_item" domainObjectName="OrderItem"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
+               enableInsert="true"/>
         <table tableName="mmal_pay_info" domainObjectName="PayInfo"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
+               enableInsert="true"/>
         <table tableName="mmal_product" domainObjectName="Product"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
+               enableInsert="true">
+            <columnOverride column="detail" jdbcType="VARCHAR"></columnOverride>
+            <columnOverride column="sub_images" jdbcType="VARCHAR"></columnOverride>
+        </table>
         <table tableName="mmal_shipping" domainObjectName="Shipping"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
+               enableInsert="true">
+
+        </table>
         <table tableName="mmall_user" domainObjectName="User"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               enableInsert="false"/>
-
+               enableInsert="true"/>
     </context>
 </generatorConfiguration>
