@@ -19,6 +19,12 @@
     from mmal_category
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectCategoryParallelByParentId" parameterType="int" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List"></include>
+    FROM mmal_category
+    WHERE parent_id = #{categoryId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from mmal_category
     where id = #{id,jdbcType=INTEGER}

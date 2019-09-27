@@ -1,7 +1,11 @@
 package com.xhhp.mmall.dao;
 
 import com.xhhp.mmall.pojo.Product;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
+@Mapper
 public interface ProductMapper {
     int deleteByPrimaryKey(Integer id);
 

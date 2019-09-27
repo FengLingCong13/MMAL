@@ -19,4 +19,6 @@ public interface IUserSerivce {
     ServerResponse<String> forgetResetPassword(String username, String passwordNew, String forgetToken);
 
     ServerResponse<User> getInformation(Integer userId) ;
+
+    public ServerResponse checkAdminRole(User user) ;
 }
