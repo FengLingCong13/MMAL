@@ -26,4 +26,82 @@ public class Const {
         String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";   //购物车数量大于库存
         String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS"; //购物车数量小于库存
     }
+
+    public enum OrderStatusEnum {
+        CANCELED(0,"取消"),
+        NO_PAY(10,"未支付"),
+        PAID(20,"已付款"),
+        SHIPPED(40,"已发货"),
+        ORDER_SUCCESS(50,"订单完成"),
+        ORDER_CLOSE(60,"订单关闭");
+
+        private Integer code;
+        private String value;
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        OrderStatusEnum(Integer code, String value) {
+            this.code = code;
+            this.value = value;
+        }
+
+        public static OrderStatusEnum codeOf(int code) {
+            for(OrderStatusEnum orderStatusEnum :values()) {
+                if(orderStatusEnum.getCode() == code) {
+                    return orderStatusEnum;
+                }
+            }
+            throw  new RuntimeException("没有找到对应的枚举");
+        }
+    }
+
+    public enum PaymentTypeEnum {
+        OLINE_PAY("在线支付",1);
+        private String value;
+        private Integer code;
+
+        PaymentTypeEnum(String value, Integer code) {
+            this.value = value;
+            this.code = code;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public static PaymentTypeEnum codeOf(int code) {
+            for(PaymentTypeEnum paymentTypeEnum :values()) {
+                if(paymentTypeEnum.getCode() == code) {
+                    return paymentTypeEnum;
+                }
+            }
+            throw  new RuntimeException("没有找到对应的枚举");
+        }
+    }
 }
