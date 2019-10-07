@@ -10,10 +10,8 @@ import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.utils.ZxingUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import com.xhhp.mmall.common.Const;
 import com.xhhp.mmall.common.ResponseCode;
 import com.xhhp.mmall.common.ServerResponse;
@@ -23,7 +21,6 @@ import com.xhhp.mmall.service.IOrderService;
 import com.xhhp.mmall.util.BigDecimalUtil;
 import com.xhhp.mmall.util.DateTimeUtil;
 import com.xhhp.mmall.util.FTPUtil;
-import com.xhhp.mmall.util.PropertiesUtil;
 import com.xhhp.mmall.vo.OrderItemVo;
 import com.xhhp.mmall.vo.OrderProductVo;
 import com.xhhp.mmall.vo.OrderVo;
@@ -32,6 +29,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
@@ -49,6 +48,7 @@ import java.util.*;
  * @date 2019/10/1
  */
 @Service("iOrderSerivce")
+@PropertySource(value = {"classpath:/application-${spring.profiles.active}.properties"})
 public class iOrderServiceImpl implements IOrderService {
 
 
@@ -70,6 +70,12 @@ public class iOrderServiceImpl implements IOrderService {
 
     @Autowired
     private ShippingMapper shippingMapper;
+
+    @Value("${ftp.server.http.prefix}")
+    private String ftpPrefix;
+
+    @Value("${alipy.callback.url}")
+    private String aliBack;
 
     @Override
     public ServerResponse pay(Long orderNo, Integer userId, String path) {
@@ -135,7 +141,7 @@ public class iOrderServiceImpl implements IOrderService {
                 .setUndiscountableAmount(undiscountableAmount).setSellerId(sellerId).setBody(body)
                 .setOperatorId(operatorId).setStoreId(storeId).setExtendParams(extendParams)
                 .setTimeoutExpress(timeoutExpress)
-                .setNotifyUrl(PropertiesUtil.getProperty("alipy.callback.url"))//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
+                .setNotifyUrl(aliBack)//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
                 .setGoodsDetailList(goodsDetailList);
         Configs.init("config/zfbinfo.properties");
 
@@ -169,7 +175,7 @@ public class iOrderServiceImpl implements IOrderService {
 
                 }
                 log.info("qrPath:" + qrPath);
-                String qrUrl = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFile.getName();
+                String qrUrl = ftpPrefix +"/img/"+targetFile.getName();
                 map.put("qrUrl",qrUrl);
                 return ServerResponse.createBySuccess(map);
             case FAILED:
@@ -322,7 +328,7 @@ public class iOrderServiceImpl implements IOrderService {
             orderItemVoList.add(assembleOrderItemVo(orderItem));
         }
         orderProductVo.setProductTotalPrice(payment);
-        orderProductVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+        orderProductVo.setImageHost(ftpPrefix);
         orderProductVo.setOrderItemVoList(orderItemVoList);
         return ServerResponse.createBySuccess(orderProductVo);
     }
@@ -420,7 +426,6 @@ public class iOrderServiceImpl implements IOrderService {
         order.setPaymentType(order.getPaymentType());
         orderVo.setPostage(order.getPostage());
         orderVo.setStatus(order.getStatus());
-        orderVo.setStatusDesc(Const.OrderStatusEnum.codeOf(order.getStatus()).getValue());
         orderVo.setShippingId(order.getShippingId());
         Shipping shipping = shippingMapper.selectByPrimaryKey(order.getShippingId());
         if(shipping != null) {
@@ -433,7 +438,7 @@ public class iOrderServiceImpl implements IOrderService {
         orderVo.setCreateTime(DateTimeUtil.dateToStr(order.getCreateTime()));
         orderVo.setCloseTime(DateTimeUtil.dateToStr(order.getCloseTime()));
 
-        orderVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+        orderVo.setImageHost(ftpPrefix);
         List<OrderItemVo> orderItemVos = Lists.newArrayList();
         for(OrderItem orderItem:orderItemList) {
             OrderItemVo orderItemVo = assembleOrderItemVo(orderItem);

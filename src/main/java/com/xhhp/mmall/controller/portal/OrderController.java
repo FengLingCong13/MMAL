@@ -92,7 +92,7 @@ public class OrderController {
 
     @RequestMapping("pay.do")
     @ResponseBody
-    public ServerResponse pay(HttpSession session, Long orderNo, HttpServletRequest request) {
+    public ServerResponse pay(HttpSession session, @RequestParam("orderNo") Long orderNo, HttpServletRequest request) {
         User user = (User)session.getAttribute(Const.CurrentUser);
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请先登录");

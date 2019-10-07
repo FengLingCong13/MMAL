@@ -5,22 +5,19 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.xhhp.mmall.common.ResponseCode;
 import com.xhhp.mmall.common.ServerResponse;
-import com.xhhp.mmall.controller.backend.ProductManangeController;
 import com.xhhp.mmall.dao.CategoryMapper;
 import com.xhhp.mmall.dao.ProductMapper;
 import com.xhhp.mmall.pojo.Category;
 import com.xhhp.mmall.pojo.Product;
 import com.xhhp.mmall.service.IProductService;
 import com.xhhp.mmall.util.DateTimeUtil;
-import com.xhhp.mmall.util.PropertiesUtil;
 import com.xhhp.mmall.vo.ProductDetailVo;
 import com.xhhp.mmall.vo.ProductListVo;
-import com.xhhp.mmall.vo.ProductListVo;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -31,6 +28,7 @@ import java.util.List;
  * @date 2019/9/27
  */
 @Service(value = "iProductService")
+@PropertySource(value = {"classpath:/application-${spring.profiles.active}.properties"})
 public class IProductOrUpdateProductImpl implements IProductService {
 
     @Autowired
@@ -38,6 +36,9 @@ public class IProductOrUpdateProductImpl implements IProductService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Value("${ftp.server.http.prefix}")
+    private String ftpPrefix;
 
     @Override
     public ServerResponse saveOrUpdateProduct(Product product) {
@@ -115,12 +116,15 @@ public class IProductOrUpdateProductImpl implements IProductService {
         List<Product> productList = productMapper.selectList();
         List<ProductListVo> productListVos = Lists.newArrayList();
         for(Product productItem :productList) {
+            System.out.println(productItem);
             ProductListVo productListVo = assembleProductListVo(productItem);
             productListVos.add(productListVo);
         }
-        PageInfo pageResult = new PageInfo(productList);
-        pageResult.setList(productListVos);
-        return ServerResponse.createBySuccess(productListVos);
+        System.out.println(productList.size());
+        System.out.println(productListVos.size());
+        PageInfo pageResult = new PageInfo(productListVos);
+        //pageResult.setList(productListVos);
+        return ServerResponse.createBySuccess(pageResult);
     }
 
     @Override
@@ -153,7 +157,7 @@ public class IProductOrUpdateProductImpl implements IProductService {
         productDetailVo.setStock(product.getStock());
         productDetailVo.setSubstitle(product.getSubtitle());
 
-        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+        productDetailVo.setImageHost(ftpPrefix);
 
         Category category =categoryMapper.selectByPrimaryKey(product.getCategoryId());
 
@@ -177,7 +181,8 @@ public class IProductOrUpdateProductImpl implements IProductService {
         productListVo.setCategoryId(product.getCategoryId());
         productListVo.setName(product.getName());
         productListVo.setPrice(product.getPrice());
-        productListVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+        productListVo.setImageHost(ftpPrefix);
+        productListVo.setMainImage(product.getMainImage());
 
         return productListVo;
     }

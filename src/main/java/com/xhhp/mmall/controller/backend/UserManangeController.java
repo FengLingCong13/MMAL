@@ -26,7 +26,7 @@ public class UserManangeController {
     private IUserSerivce iUserSerivce;
 
 
-    @RequestMapping(value = "login.do", method = RequestMethod.POST)
+    @RequestMapping(value = "login.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession session) {
         ServerResponse<User> response = iUserSerivce.login(username, password);

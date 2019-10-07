@@ -24,7 +24,7 @@ import javax.xml.ws.Response;
  */
 @Controller
 @RequestMapping("cart/")
-public class CartColler {
+public class CartContoller {
 
     @Autowired
     private ICartService iCartService;
@@ -43,7 +43,7 @@ public class CartColler {
 
     @RequestMapping(value = "add.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<CartVo> add(HttpSession session, Integer count, Integer producId) {
+    public ServerResponse<CartVo> add(HttpSession session, @RequestParam("count") Integer count,@RequestParam("productId") Integer producId) {
         if(producId == null || count == null) {
             return ServerResponse.createByERRORMessage("参数错误");
         }
@@ -57,7 +57,7 @@ public class CartColler {
 
     @RequestMapping(value = "update.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<CartVo> update(HttpSession session, Integer count, Integer producId) {
+    public ServerResponse<CartVo> update(HttpSession session, @RequestParam("count")Integer count,@RequestParam("productId") Integer producId) {
         if(producId == null || count == null) {
             return ServerResponse.createByERRORMessage("参数错误");
         }
@@ -71,12 +71,12 @@ public class CartColler {
 
     @RequestMapping(value = "delete.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<CartVo> delete(HttpSession session,String producIds) {
+    public ServerResponse<CartVo> delete(HttpSession session,@RequestParam("productIds") String productIds) {
         User user = (User)session.getAttribute(Const.CurrentUser);
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请先登录");
         }
-        return iCartService.delete(user.getId(), producIds);
+        return iCartService.delete(user.getId(), productIds);
     }
 
 

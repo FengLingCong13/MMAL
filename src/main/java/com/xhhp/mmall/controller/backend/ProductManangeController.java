@@ -9,19 +9,16 @@ import com.xhhp.mmall.pojo.User;
 import com.xhhp.mmall.service.IFileService;
 import com.xhhp.mmall.service.IProductService;
 import com.xhhp.mmall.service.IUserSerivce;
-import com.xhhp.mmall.util.PropertiesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * ProductManangeController class
@@ -31,6 +28,7 @@ import java.util.Properties;
  */
 @Controller
 @RequestMapping("/manage/product/")
+@PropertySource(value = {"classpath:/application-${spring.profiles.active}.properties"})
 public class ProductManangeController {
 
     @Autowired
@@ -41,6 +39,19 @@ public class ProductManangeController {
 
     @Autowired
     private IFileService iFileService;
+
+    @Value("${ftp.server.http.prefix}")
+    private String ftpPrefix;
+
+    @Value("${ftp.ggg}")
+    private String ftp;
+
+
+    @RequestMapping(value = "kk.do", method = RequestMethod.POST)
+    @ResponseBody
+    public void kk(HttpSession session, Product product) {
+        System.out.println(ftp+"666");
+    }
 
 
     @RequestMapping(value = "save.do", method = RequestMethod.POST)
@@ -58,39 +69,39 @@ public class ProductManangeController {
         }
     }
 
-    @RequestMapping(value = "set_sale_status.do")
+    @RequestMapping(value = "set_sale_status.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse setSaleStatus(HttpSession session, Product product) {
+    public ServerResponse setSaleStatus(HttpSession session, @RequestParam("productId") Integer productId,@RequestParam("status") Integer status) {
         User user = (User)session.getAttribute(Const.CurrentUser);
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录，请登录");
         }
         if(iUserSerivce.checkAdminRole(user).isSuccess()) {
             //增加产品的业务逻辑
-            return iProductService.setSaleStatus(product.getId(), product.getStatus());
+            return iProductService.setSaleStatus(productId, status);
         } else {
             return ServerResponse.createByERRORMessage("无权限操作");
         }
     }
 
 
-    @RequestMapping(value = "detail.do")
+    @RequestMapping(value = "detail.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse getDetail(HttpSession session, int producId) {
+    public ServerResponse getDetail(HttpSession session, @RequestParam("productId") Integer productId) {
         User user = (User)session.getAttribute(Const.CurrentUser);
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录，请登录");
         }
         if(iUserSerivce.checkAdminRole(user).isSuccess()) {
             //增加产品的业务逻辑
-            return iProductService.manageProductDetail(producId);
+            return iProductService.manageProductDetail(productId);
         } else {
             return ServerResponse.createByERRORMessage("无权限操作");
         }
     }
 
 
-    @RequestMapping(value = "list.do")
+    @RequestMapping(value = "list.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse getList(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,@RequestParam(value = "pageSize",defaultValue = "10") int pageSize) {
         User user = (User)session.getAttribute(Const.CurrentUser);
@@ -131,8 +142,9 @@ public class ProductManangeController {
         }
         if(iUserSerivce.checkAdminRole(user).isSuccess()) {
             String path = request.getSession().getServletContext().getRealPath("upload");
+            //String path = PropertiesUtil.getProperty("ftp.server.http.prefix");
             String targetFileName = iFileService.upload(file,path);
-            String url = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFileName;
+            String url = ftpPrefix +"/img/"+ targetFileName;
 
             Map fileMap = Maps.newHashMap();
             fileMap.put("uri",targetFileName);

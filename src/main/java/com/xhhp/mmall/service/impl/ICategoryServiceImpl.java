@@ -7,6 +7,8 @@ import com.xhhp.mmall.dao.CategoryMapper;
 import com.xhhp.mmall.pojo.Category;
 import com.xhhp.mmall.service.ICategoryService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +26,7 @@ import java.util.*;
 @Service(value = "iCategoryService")
 public class ICategoryServiceImpl implements ICategoryService {
 
+    Logger logger = LoggerFactory.getLogger(ICategoryServiceImpl.class);
     @Autowired
     private CategoryMapper categoryMapper;
 
@@ -33,7 +36,6 @@ public class ICategoryServiceImpl implements ICategoryService {
         if(parentId < 0 || StringUtils.isBlank(categoryName)) {
             return ServerResponse.createByERRORMessage("添加参数错误");
         }
-
         Category category = new Category();
         category.setName(categoryName);
         category.setParentId(parentId);

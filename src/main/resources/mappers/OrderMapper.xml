@@ -31,7 +31,7 @@
     SELECT
     <include refid="Base_Column_List"></include>
     FROM mmal_order
-    WHERE order_no = #{orderno}
+    WHERE order_no = #{orderNo}
     AND user_id = #{userId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

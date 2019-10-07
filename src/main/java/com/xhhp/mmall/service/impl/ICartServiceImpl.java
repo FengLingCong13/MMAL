@@ -10,10 +10,11 @@ import com.xhhp.mmall.pojo.Cart;
 import com.xhhp.mmall.pojo.Product;
 import com.xhhp.mmall.service.ICartService;
 import com.xhhp.mmall.util.BigDecimalUtil;
-import com.xhhp.mmall.util.PropertiesUtil;
 import com.xhhp.mmall.vo.CartProductVo;
 import com.xhhp.mmall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -27,6 +28,7 @@ import java.util.List;
  * @date 2019/9/28
  */
 @Service("iCartService")
+@PropertySource(value = {"classpath:/application-${spring.profiles.active}.properties"})
 public class ICartServiceImpl implements ICartService {
 
     @Autowired
@@ -34,6 +36,9 @@ public class ICartServiceImpl implements ICartService {
 
     @Autowired
     private ProductMapper productMapper;
+
+    @Value("${ftp.server.http.prefix}")
+    private String ftpPrefix;
 
     @Override
     public ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count) {
@@ -132,6 +137,7 @@ public class ICartServiceImpl implements ICartService {
                         Cart cart1 = new Cart();
                         cart1.setId(cart.getId());
                         cart1.setQuantity(buyLimitCount);
+                        cartProductVo.setLimitQuantity(Const.Cart.LIMIT_NUM_FAIL);
                         cartMapper.updateByPrimaryKeySelective(cart);
                     }
                     cartProductVo.setQuantity(buyLimitCount);
@@ -152,7 +158,7 @@ public class ICartServiceImpl implements ICartService {
         cartVo.setCartTotalPrice(cartTotalPrice);
         cartVo.setCartProductVo(cartProductVoList);
         cartVo.setAllchecked(getAllCheckedStatus(userId));
-        cartVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+        cartVo.setImageHost(ftpPrefix);
         return cartVo;
     }
 

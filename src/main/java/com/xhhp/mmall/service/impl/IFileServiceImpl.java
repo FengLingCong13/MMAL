@@ -26,24 +26,26 @@ public class IFileServiceImpl implements IFileService {
         String fileExtensionName =  fileName.substring(fileName.lastIndexOf(".")+1);
 
         String newName = UUID.randomUUID().toString() + fileExtensionName;
-
+        String newName2 = UUID.randomUUID().toString() +"."+ fileExtensionName;
+        System.out.println(path);
         File fileDir = new File(path);
+        System.out.println(fileDir);
         if(!fileDir.exists()) {
             fileDir.setWritable(true);
             fileDir.mkdirs();
         }
 
-        File targetFile = new File(path, newName);
-
+        File targetFile = new File(path, newName2);
+        System.out.println(newName);
         try {
             file.transferTo(targetFile);
             //文件上传成功
 
             //将targetFile上传到ftp服务器上
-            FTPUtil.upLoadFile(Lists.newArrayList(targetFile));
-
+            boolean result = FTPUtil.upLoadFile(Lists.newArrayList(targetFile));
+            System.out.println(result);
             //上传完之后，删除upload下面的文件
-            targetFile.delete();
+            //targetFile.delete();
 
         } catch (IOException e) {
             e.printStackTrace();
