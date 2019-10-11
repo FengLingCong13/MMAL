@@ -28,7 +28,6 @@ import java.util.List;
  * @date 2019/9/27
  */
 @Service(value = "iProductService")
-@PropertySource(value = {"classpath:/application-${spring.profiles.active}.properties"})
 public class IProductOrUpdateProductImpl implements IProductService {
 
     @Autowired
@@ -38,7 +37,7 @@ public class IProductOrUpdateProductImpl implements IProductService {
     private CategoryMapper categoryMapper;
 
     @Value("${ftp.server.http.prefix}")
-    private String ftpPrefix;
+    private String ftpPrefix="http://image.xhhp.com";
 
     @Override
     public ServerResponse saveOrUpdateProduct(Product product) {

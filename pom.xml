@@ -12,6 +12,7 @@
     <artifactId>mmall</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mmall</name>
+    <packaging>war</packaging>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -37,7 +38,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.8</version>
-
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
-            <version>2.1.5.RELEASE</version>
+            <version>2.1.8.RELEASE</version>
             <scope>compile</scope>
         </dependency>
 
@@ -155,11 +155,23 @@
             <version>3.0.1</version>
         </dependency>
 
+        <!--jackson的maven依赖-->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -239,32 +251,32 @@
         <!--</resources>-->
 
     </build>
-    <profiles>
-        <!--生产环境——默认-->
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <profiles.active>dev</profiles.active>
-            </properties>
-        </profile>
+    <!--<profiles>-->
+        <!--&lt;!&ndash;生产环境——默认&ndash;&gt;-->
+        <!--<profile>-->
+            <!--<id>dev</id>-->
+            <!--<activation>-->
+                <!--<activeByDefault>true</activeByDefault>-->
+            <!--</activation>-->
+            <!--<properties>-->
+                <!--<profiles.active>dev</profiles.active>-->
+            <!--</properties>-->
+        <!--</profile>-->
 
-        <!--测试环境-->
-        <profile>
-            <id>beta</id>
-            <properties>
-                <profiles.active>beta</profiles.active>
-            </properties>
-        </profile>
+        <!--&lt;!&ndash;测试环境&ndash;&gt;-->
+        <!--<profile>-->
+            <!--<id>beta</id>-->
+            <!--<properties>-->
+                <!--<profiles.active>beta</profiles.active>-->
+            <!--</properties>-->
+        <!--</profile>-->
 
-        <!--线上环境-->
-        <profile>
-            <id>prod</id>
-            <properties>
-                <profiles.active>prod</profiles.active>
-            </properties>
-        </profile>
-    </profiles>
+        <!--&lt;!&ndash;线上环境&ndash;&gt;-->
+        <!--<profile>-->
+            <!--<id>prod</id>-->
+            <!--<properties>-->
+                <!--<profiles.active>prod</profiles.active>-->
+            <!--</properties>-->
+        <!--</profile>-->
+    <!--</profiles>-->
 </project>

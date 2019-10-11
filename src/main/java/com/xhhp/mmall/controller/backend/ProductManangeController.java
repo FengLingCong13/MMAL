@@ -28,7 +28,6 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/manage/product/")
-@PropertySource(value = {"classpath:/application-${spring.profiles.active}.properties"})
 public class ProductManangeController {
 
     @Autowired
@@ -40,11 +39,9 @@ public class ProductManangeController {
     @Autowired
     private IFileService iFileService;
 
-    @Value("${ftp.server.http.prefix}")
-    private String ftpPrefix;
+    private String ftpPrefix="http://image.xhhp.com";
 
-    @Value("${ftp.ggg}")
-    private String ftp;
+    private String ftp="32";
 
 
     @RequestMapping(value = "kk.do", method = RequestMethod.POST)

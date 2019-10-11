@@ -28,7 +28,6 @@ import java.util.List;
  * @date 2019/9/28
  */
 @Service("iCartService")
-@PropertySource(value = {"classpath:/application-${spring.profiles.active}.properties"})
 public class ICartServiceImpl implements ICartService {
 
     @Autowired
@@ -37,8 +36,7 @@ public class ICartServiceImpl implements ICartService {
     @Autowired
     private ProductMapper productMapper;
 
-    @Value("${ftp.server.http.prefix}")
-    private String ftpPrefix;
+    private String ftpPrefix="http://image.xhhp.com";
 
     @Override
     public ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count) {
