@@ -35,6 +35,7 @@ public class UserController {
 
     /**
      * 用户登录功能
+     *
      * @param username
      * @param password
      * @param session
@@ -43,18 +44,18 @@ public class UserController {
     @RequestMapping(value = "login.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletResponse servletResponse) {
-        ServerResponse<User> response = iUserSerivce.login(username,password);
+        ServerResponse<User> response = iUserSerivce.login(username, password);
 
-        if(response.isSuccess()){
-            CookieUtil.writeLoginToken(servletResponse,session.getId());
-            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()),Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
+        if (response.isSuccess()) {
+            CookieUtil.writeLoginToken(servletResponse, session.getId());
+            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
 
         }
         return response;
     }
 
 
-    @RequestMapping(value = "logout.do" , method = RequestMethod.POST)
+    @RequestMapping(value = "logout.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse logOut(HttpServletRequest request, HttpServletResponse response) {
         String loginToken = CookieUtil.readLoginToken(request);
@@ -63,32 +64,32 @@ public class UserController {
         return ServerResponse.createBySuccess();
     }
 
-    @RequestMapping(value = "register.do" , method = RequestMethod.POST)
+    @RequestMapping(value = "register.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> register(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email,@RequestParam("phone") String phone,@RequestParam("question") String question,@RequestParam("answer") String answer) {
-        User user = new User(username,password,email,phone,question,answer);
+    public ServerResponse<String> register(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("email") String email, @RequestParam("phone") String phone, @RequestParam("question") String question, @RequestParam("answer") String answer) {
+        User user = new User(username, password, email, phone, question, answer);
         return iUserSerivce.register(user);
     }
 
-    @RequestMapping(value = "check_valid.do" , method = RequestMethod.POST)
+    @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> checkValid(@RequestParam("str") String str,@RequestParam("type") String type) {
+    public ServerResponse<String> checkValid(@RequestParam("str") String str, @RequestParam("type") String type) {
         return iUserSerivce.checkValid(str, type);
     }
 
-    @RequestMapping(value = "get_user_info.do" ,method = RequestMethod.POST)
+    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpServletRequest request) {
         //User user = (User)session.getAttribute(Const.CurrentUser);
         //System.out.println(user);
         String loginToken = CookieUtil.readLoginToken(request);
-        if(StringUtils.isEmpty(loginToken)) {
+        if (StringUtils.isEmpty(loginToken)) {
             return ServerResponse.createByERRORMessage("用户未登录，无法获取当前用户的信息");
         }
         String userJsonStr = RedisPoolUtil.get(loginToken);
-        User user  = JsonUtil.string2Obj(userJsonStr,User.class);
+        User user = JsonUtil.string2Obj(userJsonStr, User.class);
 
-        if(user != null) {
+        if (user != null) {
             return ServerResponse.createBySuccess(user);
         }
         return ServerResponse.createByERRORMessage("用户未登录，无法获取信息");
@@ -96,32 +97,37 @@ public class UserController {
 
     @RequestMapping(value = "forget_get_question.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> forgetGetQuestion(@RequestParam("username") String username){
+    public ServerResponse<String> forgetGetQuestion(@RequestParam("username") String username) {
         return iUserSerivce.selctQuestion(username);
     }
 
     @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> forgetCheckQuestion(@RequestParam("username")String username, @RequestParam("question")String question, @RequestParam("answer")String answer) {
-        return iUserSerivce.checkAnswer(username,question,answer);
+    public ServerResponse<String> forgetCheckQuestion(@RequestParam("username") String username, @RequestParam("question") String question, @RequestParam("answer") String answer) {
+        return iUserSerivce.checkAnswer(username, question, answer);
     }
 
 
     @RequestMapping(value = "forget_reset_password.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> forgetRestPassword(@RequestParam("username") String username, @RequestParam("passwordNew") String passwordNew,@RequestParam("forgetToken") String forgetToken) {
-        return iUserSerivce.forgetResetPassword(username,passwordNew,forgetToken);
+    public ServerResponse<String> forgetRestPassword(@RequestParam("username") String username, @RequestParam("passwordNew") String passwordNew, @RequestParam("forgetToken") String forgetToken) {
+        return iUserSerivce.forgetResetPassword(username, passwordNew, forgetToken);
     }
 
 
     @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> getInformation(HttpSession session) {
+    public ServerResponse<User> getInformation(HttpServletRequest request,HttpSession session) {
 
-        User currentUser = (User)session.getAttribute(Const.CurrentUser);
-        if(currentUser == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录，需要强制登录");
+        String loginToken = CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByERRORMessage("用户未登录，无法获取当前用户的信息");
         }
-        return iUserSerivce.getInformation(currentUser.getId());
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user  = JsonUtil.string2Obj(userJsonStr,User.class);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登录，需要强制登录");
+        }
+        return iUserSerivce.getInformation(user.getId());
     }
 }
