@@ -20,6 +20,7 @@ import java.io.IOException;
  * @author Flc
  * @date 2019/10/14
  */
+@Component
 @WebFilter(urlPatterns = "/", filterName = "SessionExpireFilter")
 public class SessionExpireFilter implements Filter {
 
