@@ -21,7 +21,7 @@ import java.io.IOException;
  * @date 2019/10/14
  */
 @Component
-@WebFilter(urlPatterns = "/", filterName = "SessionExpireFilter")
+@WebFilter(urlPatterns = "*.do", filterName = "SessionExpireFilter")
 public class SessionExpireFilter implements Filter {
 
     @Override
