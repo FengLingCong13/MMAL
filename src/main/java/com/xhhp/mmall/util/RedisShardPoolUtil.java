@@ -11,7 +11,7 @@ import redis.clients.jedis.ShardedJedis;
  * @date 2019/10/8
  */
 @Slf4j
-public class RedisPoolUtil {
+public class RedisShardPoolUtil {
 
     public static String set(String key, String value) {
         ShardedJedis jedis = null;
