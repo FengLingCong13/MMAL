@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2019/10/9
  */
 public class   CookieUtil {
-    private final static String COOKIE_DOMAIN = ".localhost";
+    //private final static String COOKIE_DOMAIN = ".localhost";
+    private final static String COOKIE_DOMAIN = "";
     private final static String COOKIE_NAME = "mmal_login_token";
 
     public static String readLoginToken(HttpServletRequest request) {
