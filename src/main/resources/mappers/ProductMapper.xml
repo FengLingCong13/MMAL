@@ -194,4 +194,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  <select id="selectStockByProductId" resultType="int" parameterType="java.lang.Integer">
+    SELECT
+    stock
+    from mmal_product
+    where id =#{id}
+    for update
+  </select>
+
 </mapper>

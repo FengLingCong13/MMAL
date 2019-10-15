@@ -28,4 +28,6 @@ public interface OrderItemMapper {
     void batchInsert(@Param("orderItemList") List<OrderItem> orderItemList);
 
     List<OrderItem> manageList(@Param("orderNo") Long orderNo);
+
+    List<OrderItem> getByOrderNo(@Param("orderNo") Long orderNo);
 }

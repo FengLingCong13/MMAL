@@ -8,11 +8,13 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @MapperScan("com.xhhp.mmall.dao")
 @ComponentScan(basePackages = {"com.xhhp.mmall.*"})
 @ServletComponentScan
+@EnableScheduling
 public class MmallApplication extends SpringBootServletInitializer {
 
     @Override
