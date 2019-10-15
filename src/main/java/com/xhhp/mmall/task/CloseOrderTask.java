@@ -27,7 +27,7 @@ public class CloseOrderTask {
         //iOrderService.closeOrder(hour);
         log.info("关闭订单定时任务结束");
     }
-
+    @Scheduled(cron="0 */1 * * * ?")//每分钟执行一次gi
     public void closeOrderTaskV2() {
         log.info("关闭订单定时任务启动");
         long lockTimeout = 50000; //毫秒数
