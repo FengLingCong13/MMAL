@@ -45,6 +45,11 @@ public class CloseOrderTask {
         log.info("获取分布式锁");
         RedisShardPoolUtil.expire(lockName,50);//有效期50秒，防止死锁
         //iOrderService.closeOrder(2);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         RedisShardPoolUtil.del(Const.REDIS_LOCK.CLOSE_ORDER_TASK_LOCK);
         log.info("释放分布式锁");
     }
