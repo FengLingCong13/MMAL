@@ -39,6 +39,19 @@ public class RedisShardPoolUtil {
         return result;
     }
 
+    public static String getSet(String key, String value) {
+        ShardedJedis jedis = null;
+        String result = null;
+        try {
+            jedis = RedisShardedPool.getJedis();
+            result = jedis.getSet(key, value);
+        }catch (Exception e) {
+            log.error("getSet key:{},error", key, e);
+            jedis.close();
+        }
+        return result;
+    }
+
     public static String setEx(String key, String value, int exTime) {
         ShardedJedis jedis = null;
         String result = null;
